@@ -76,9 +76,24 @@ fun HijriDatePickerButton() {
     // State to control dialog visibility - initialized to false
     var showDialog by remember { mutableStateOf(false) }
 
-    // Button to show the Hijri Date Picker
-    Button(onClick = { showDialog = true }) {
-        Text(text = selectedDate.value)
+    // Center the button in a Box
+    Box(
+        modifier = Modifier
+            .fillMaxSize(), // Fill the entire screen
+        contentAlignment = Alignment.Center // Center the button within the Box
+    ) {
+        // Button to show the Hijri Date Picker
+        Button(
+            onClick = { showDialog = true },
+            modifier = Modifier
+                .width(250.dp) // Increase button width
+                .height(70.dp) // Increase button height
+        ) {
+            Text(
+                text = selectedDate.value,
+                fontSize = 20.sp // Increase the font size for better visibility
+            )
+        }
     }
 
     // Show the custom Hijri Date Picker Dialog only when showDialog is true
