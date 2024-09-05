@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.myapplication"
+    namespace = "com.sdody.HijriDatePickerPlusApplication"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.myapplication"
+        applicationId = "com.sdody.HijriDatePickerPlusApplication"
         minSdk = 30
         targetSdk = 34
         versionCode = 1

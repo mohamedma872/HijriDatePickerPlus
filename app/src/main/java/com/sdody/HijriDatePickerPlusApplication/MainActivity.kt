@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.sdody.HijriDatePickerPlusApplication
 import android.icu.util.IslamicCalendar
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -29,13 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.github.msarhan.ummalqura.calendar.UmmalquraCalendar
-import org.joda.time.DateTime
-import org.joda.time.chrono.IslamicChronology
-import java.time.chrono.HijrahDate
-import java.time.temporal.ChronoField
 import java.util.Calendar
-import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
 
         // Get the current Hijri date
-        val currentHijriCalendar = UmmalquraCalendar()
+        val currentHijriCalendar = IslamicCalendar()
         val currentHijriYear = currentHijriCalendar.get(Calendar.YEAR)
         val currentHijriMonth = currentHijriCalendar.get(Calendar.MONTH)
         val currentHijriDay = currentHijriCalendar.get(Calendar.DAY_OF_MONTH)
