@@ -66,12 +66,14 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("com.github.msarhan:ummalqura-calendar:2.0.2")
-    implementation( "androidx.compose.material3:material3:1.0.0")
-    implementation ("com.google.android.material:material:1.4.0")
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
-    implementation ("androidx.compose.foundation:foundation:1.0.0")
-    implementation ("net.danlew:android.joda:2.10.9.1")
+    implementation(libs.ummalqura.calendar)
+    implementation( libs.material3)
+    implementation (libs.material)
+    implementation (libs.androidx.lifecycle.runtime.ktx.v231)
+    implementation (libs.androidx.foundation)
+    implementation (libs.android.joda)
+    implementation (libs.kotlinx.coroutines.core)
+    implementation (libs.kotlinx.coroutines.android)
 
 
 }
