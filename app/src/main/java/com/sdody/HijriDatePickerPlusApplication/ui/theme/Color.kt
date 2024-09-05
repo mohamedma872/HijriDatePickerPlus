@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.theme
+package com.sdody.HijriDatePickerPlusApplication.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
