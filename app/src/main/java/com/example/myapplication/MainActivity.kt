@@ -3,7 +3,6 @@ import android.icu.util.IslamicCalendar
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -18,11 +17,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
@@ -435,7 +431,7 @@ fun MonthGridWithDays(
 
 fun getHijriDaysInMonth(year: Int, month: Int): Int {
     return try {
-        val hijriCalendar = UmmalquraCalendar(year, month, 1)
+        val hijriCalendar = IslamicCalendar(year, month, 1)
         hijriCalendar.add(Calendar.MONTH, 1)
         hijriCalendar.set(Calendar.DAY_OF_MONTH, 1)
         hijriCalendar.add(Calendar.DAY_OF_MONTH, -1)
@@ -486,7 +482,7 @@ object HijriCalendarDataCache {
 
         // If not cached, calculate the number of days in the month
         return try {
-            val hijriCalendar = UmmalquraCalendar(year, month, 1)
+            val hijriCalendar = IslamicCalendar(year, month, 1)
             hijriCalendar.add(Calendar.MONTH, 1)
             hijriCalendar.set(Calendar.DAY_OF_MONTH, 1)
             hijriCalendar.add(Calendar.DAY_OF_MONTH, -1)
@@ -510,7 +506,7 @@ object HijriCalendarDataCache {
 @Composable
 fun PreviewHijriDatePickerButton() {
     // Get the current Hijri date
-    val currentHijriCalendar = UmmalquraCalendar()
+    val currentHijriCalendar = IslamicCalendar()
     val currentHijriYear = currentHijriCalendar.get(Calendar.YEAR)
     val currentHijriMonth = currentHijriCalendar.get(Calendar.MONTH)
     val currentHijriDay = currentHijriCalendar.get(Calendar.DAY_OF_MONTH)
