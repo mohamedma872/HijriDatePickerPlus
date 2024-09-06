@@ -42,6 +42,7 @@ material3 = { module = "androidx.compose.material3:material3", version.ref = "ma
 ummalqura-calendar = { module = "com.github.msarhan:ummalqura-calendar", version.ref = "ummalquraCalendar" }
 
 [plugins]
+android-library = { id = "com.android.library", version = "7.4.2" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 

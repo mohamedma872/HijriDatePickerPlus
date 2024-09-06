@@ -39,45 +39,38 @@ class MainActivity : ComponentActivity() {
         println("Days in Muharram: ${getHijriDaysInMonth(1309, 0)}")
         println("Days in Safar: ${getHijriDaysInMonth(1309, 1)}")
 
-
-        // Get the current Hijri date
-        val currentHijriCalendar = IslamicCalendar()
-        val currentHijriYear = currentHijriCalendar.get(Calendar.YEAR)
-        val currentHijriMonth = currentHijriCalendar.get(Calendar.MONTH)
-        val currentHijriDay = currentHijriCalendar.get(Calendar.DAY_OF_MONTH)
-        HijriCalendarDataCache.initializeForYear(currentHijriYear)
-
         setContent {
             HijriDatePickerButton(
-                initialYear = currentHijriYear,
-                initialMonth = currentHijriMonth,
-                initialDay = currentHijriDay
             )
         }
     }
 }
-
 @Composable
 fun HijriDatePickerButton(
-    initialYear: Int,
-    initialMonth: Int,
-    initialDay: Int
-) {
-    // State to hold the selected Hijri date, starting with the current Hijri date
-    val selectedDate = remember { mutableStateOf("$initialDay-${getHijriMonthName(initialMonth)}-$initialYear") }
 
-    // State to control dialog visibility - initialized to false
+) {
+    // Get the current Hijri date
+    val currentHijriCalendar = IslamicCalendar()
+    val currentHijriYear = currentHijriCalendar.get(Calendar.YEAR)
+    val currentHijriMonth = currentHijriCalendar.get(Calendar.MONTH)
+    val currentHijriDay = currentHijriCalendar.get(Calendar.DAY_OF_MONTH)
+
+    HijriCalendarDataCache.initializeForYear(currentHijriYear)
+
+    // State to hold the selected Hijri date, starting with the current Hijri date
+    val selectedDate = remember { mutableStateOf("$currentHijriDay-${getHijriMonthName(currentHijriMonth)}-$currentHijriDay") }
+
+    // State to control dialog visibility
     var showDialog by remember { mutableStateOf(false) }
 
     // State for preselected date (used when reopening the picker)
-    val preselectedYear = remember { mutableStateOf(initialYear) }
-    val preselectedMonth = remember { mutableStateOf(initialMonth) }
-    val preselectedDay = remember { mutableStateOf(initialDay) }
+    val preselectedYear = remember { mutableStateOf(currentHijriYear) }
+    val preselectedMonth = remember { mutableStateOf(currentHijriMonth) }
+    val preselectedDay = remember { mutableStateOf(currentHijriDay) }
 
     // Center the button in a Box
     Box(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         // Button to show the Hijri Date Picker
@@ -85,9 +78,7 @@ fun HijriDatePickerButton(
             onClick = {
                 showDialog = true // Open the dialog
             },
-            modifier = Modifier
-                .width(250.dp)
-                .height(70.dp)
+            modifier = Modifier.width(250.dp).height(70.dp)
         ) {
             Text(
                 text = selectedDate.value,
@@ -129,7 +120,7 @@ fun HijriDatePickerDialogWithThreeSections(
     onDateSelected: (Int, Int, Int) -> Unit,
     onConfirm: () -> Unit,
     onDismissRequest: () -> Unit,
-    initialShowYearSelection: Boolean = true
+    initialShowYearSelection: Boolean = true // Always show year selection when opening the dialog
 ) {
     var selectedYear by remember { mutableStateOf(initialYear) }
     var selectedMonth by remember { mutableStateOf(initialMonth) }
@@ -144,43 +135,36 @@ fun HijriDatePickerDialogWithThreeSections(
 
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 400.dp, max = 500.dp)
-                .padding(16.dp),
+            modifier = Modifier.fillMaxWidth().heightIn(min = 400.dp, max = 500.dp).padding(16.dp),
             shape = MaterialTheme.shapes.medium
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
+                modifier = Modifier.fillMaxWidth().background(Color.White)
             ) {
-                // Pass the selected (or preselected) date to the header
+                // Header section with the selected date
                 val cal = IslamicCalendar(selectedYear, selectedMonth, selectedDay)
 
                 // Pass the callback to trigger year selection
                 HeaderSection(islamicCalendar = cal) {
-                    showYearSelection = true // Show year selection on click
+                    showYearSelection = true // Toggle to show year selection when the year is clicked
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Show the year selection or the month grid
+                // Show either the year selection screen or the month grid
                 if (showYearSelection) {
                     YearSelectionScreen(
                         selectedYear = selectedYear,
                         onYearSelected = { year ->
                             selectedYear = year
-                            showYearSelection = false // Switch to month grid after year is selected
+                            showYearSelection = false // Switch back to month grid after year is selected
                         },
-                        currentYear = initialYear // Pass the preselected year to focus
+                        currentYear = initialYear // Pass the preselected year to focus on it
                     )
                 } else {
                     // Month Grid with Days Section
                     Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
+                        modifier = Modifier.weight(1f).fillMaxWidth()
                     ) {
                         MonthGridWithDays(
                             selectedYear = selectedYear,
@@ -189,14 +173,16 @@ fun HijriDatePickerDialogWithThreeSections(
                                 selectedMonth = month
                                 selectedDay = day
                                 onDateSelected(year, month, day)
-                            }
+                            },
+                            preselectedMonth = selectedMonth, // Pass the preselected month
+                            preselectedDay = selectedDay // Pass the preselected day
                         )
                     }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Footer with next month name
+                // Footer with Confirm and Cancel buttons
                 FooterSection(
                     nextMonthName = getHijriMonthName(selectedMonth),
                     onConfirm = onConfirm,
@@ -210,10 +196,7 @@ fun HijriDatePickerDialogWithThreeSections(
 @Composable
 fun HeaderSection(islamicCalendar: IslamicCalendar, onYearClick: () -> Unit) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFF008080)) // Use a teal-like color similar to the image
-            .padding(16.dp),
+        modifier = Modifier.fillMaxWidth().background(Color(0xFF008080)).padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Display the weekday at the top
@@ -226,16 +209,15 @@ fun HeaderSection(islamicCalendar: IslamicCalendar, onYearClick: () -> Unit) {
             Text(text = islamicCalendar.get(Calendar.DAY_OF_MONTH).toString(), color = Color.White, fontSize = 40.sp)
         }
 
-        // Display the year at the bottom and make it clickable
+        // Display the year at the bottom and make it clickable to trigger year selection
         Text(
             text = islamicCalendar.get(Calendar.YEAR).toString(),
             color = Color.White,
             fontSize = 24.sp,
-            modifier = Modifier.clickable { onYearClick() } // Clicking the year triggers the year selection
+            modifier = Modifier.clickable { onYearClick() } // Trigger year selection when the year is clicked
         )
     }
 }
-
 
 @Composable
 fun YearSelectionScreen(
@@ -279,19 +261,63 @@ fun YearSelectionScreen(
     }
 }
 
-// Helper function to get weekday name
-fun getWeekday(islamicCalendar: IslamicCalendar): String {
-    return when (islamicCalendar.get(Calendar.DAY_OF_WEEK)) {
-        Calendar.SUNDAY -> "Sunday"
-        Calendar.MONDAY -> "Monday"
-        Calendar.TUESDAY -> "Tuesday"
-        Calendar.WEDNESDAY -> "Wednesday"
-        Calendar.THURSDAY -> "Thursday"
-        Calendar.FRIDAY -> "Friday"
-        Calendar.SATURDAY -> "Saturday"
-        else -> ""
+@Composable
+fun MonthGridWithDays(
+    selectedYear: Int,
+    onDaySelected: (Int, Int, Int) -> Unit,
+    preselectedMonth: Int,
+    preselectedDay: Int
+) {
+    // State to track the selected day and month
+    var selectedMonthState by remember { mutableStateOf(preselectedMonth) }
+    var selectedDayState by remember { mutableStateOf(preselectedDay) }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)
+    ) {
+        items(12) { month ->
+            // Month Header
+            Text(
+                text = getHijriMonthName(month),
+                fontSize = 20.sp,
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                color = Color(0xFF008080)
+            )
+
+            // Retrieve cached days for the current month
+            val daysInMonth = HijriCalendarDataCache.getDaysForMonth(selectedYear, month)
+
+            // Wrapping LazyVerticalGrid in a fixed height to avoid performance issues
+            Box(
+                modifier = Modifier.fillMaxWidth().height(200.dp)
+            ) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(7), // 7 days in a week
+                    modifier = Modifier.fillMaxSize(),
+                    content = {
+                        items(daysInMonth) { day ->
+                            val adjustedDay = day + 1
+                            Box(
+                                modifier = Modifier.size(40.dp).clickable {
+                                    selectedMonthState = month
+                                    selectedDayState = adjustedDay
+                                    onDaySelected(selectedYear, month, adjustedDay)
+                                }.background(
+                                    if (month == selectedMonthState && adjustedDay == selectedDayState)
+                                        Color(0xFF008080) else Color.LightGray
+                                ).padding(8.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(text = "$adjustedDay", fontSize = 16.sp, color = Color.White)
+                            }
+                        }
+                    }
+                )
+            }
+        }
     }
 }
+
 
 @Composable
 fun FooterSection(nextMonthName: String, onConfirm: () -> Unit, onCancel: () -> Unit) {
@@ -320,196 +346,13 @@ fun FooterSection(nextMonthName: String, onConfirm: () -> Unit, onCancel: () -> 
 }
 
 
-fun getHijriMonthAbbr(month: Int): String {
-    return when (month) {
-        0 -> "MUH"
-        1 -> "SAF"
-        2 -> "RAB-I"
-        3 -> "RAB-II"
-        4 -> "JUM-I"
-        5 -> "JUM-II"
-        6 -> "RAJ"
-        7 -> "SHA"
-        8 -> "RAM"
-        9 -> "SHAW"
-        10 -> "DHU-Q"
-        11 -> "DHU-H"
-        else -> ""
-    }
-}
-
-fun getHijriMonthName(month: Int): String {
-    return when (month % 12) { // Handle month overflow
-        0 -> "Muharram"
-        1 -> "Safar"
-        2 -> "Rabi' al-Awwal"
-        3 -> "Rabi' al-Thani"
-        4 -> "Jumada al-Awwal"
-        5 -> "Jumada al-Thani"
-        6 -> "Rajab"
-        7 -> "Sha'ban"
-        8 -> "Ramadan"
-        9 -> "Shawwal"
-        10 -> "Dhu al-Qi'dah"
-        11 -> "Dhu al-Hijjah"
-        else -> ""
-    }
-}
-
-@Composable
-fun MonthGridWithDays(
-    selectedYear: Int,
-    onDaySelected: (Int, Int, Int) -> Unit
-) {
-    // State to track the selected day and month
-    var selectedMonthState by remember { mutableStateOf(0) }
-    var selectedDayState by remember { mutableStateOf(1) }
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-    ) {
-        items(12) { month ->
-            // Month Header
-            Text(
-                text = getHijriMonthName(month),
-                fontSize = 20.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                color = Color(0xFF008080)
-            )
-
-            // Retrieve cached days for the current month
-            val daysInMonth = HijriCalendarDataCache.getDaysForMonth(year = selectedYear,month)
-
-            // Wrapping LazyVerticalGrid in a fixed height to avoid performance issues
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp) // Adjust height to fit your UI
-            ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(7), // 7 days in a week
-                    modifier = Modifier.fillMaxSize(),
-                    content = {
-                        items(daysInMonth) { day ->
-                            val adjustedDay = day+1
-                            Box(
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .clickable {
-                                        selectedMonthState = month
-                                        selectedDayState = adjustedDay
-                                        onDaySelected(selectedYear, month, adjustedDay)
-                                    }
-                                    .background(
-                                        if (month == selectedMonthState && adjustedDay == selectedDayState)
-                                            Color(0xFF008080) else Color.LightGray
-                                    )
-                                    .padding(8.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-
-                                Text(text = "$adjustedDay", fontSize = 16.sp, color = Color.White)
-                            }
-                        }
-                    }
-                )
-            }
-        }
-    }
-}
-
-
-fun getHijriDaysInMonth(year: Int, month: Int): Int {
-    return try {
-        val hijriCalendar = IslamicCalendar(year, month, 1)
-        hijriCalendar.add(Calendar.MONTH, 1)
-        hijriCalendar.set(Calendar.DAY_OF_MONTH, 1)
-        hijriCalendar.add(Calendar.DAY_OF_MONTH, -1)
-        hijriCalendar.get(Calendar.DAY_OF_MONTH)
-    } catch (e: Exception) {
-        30 // Default to 30 days if there's an error
-    }
-}
-
-
-object HijriCalendarDataCache {
-
-    // Cache days for each year separately, with each year holding month-to-days mapping
-    private val cachedYearlyMonthDays = mutableMapOf<Int, MutableMap<Int, Int>>() // Changed to store Int instead of List<Int>
-
-    // Precompute all the months and their number of days for the given year
-    fun initializeForYear(year: Int) {
-        if (cachedYearlyMonthDays[year] == null) {
-            cachedYearlyMonthDays[year] = mutableMapOf()
-            for (month in 0..11) {
-                cachedYearlyMonthDays[year]?.set(month, getDaysInHijriMonth(year, month))
-            }
-        }
-    }
-
-    // Retrieve cached number of days for a given year and month, and calculate if not cached
-    fun getDaysForMonth(year: Int, month: Int): Int {
-        // Check if the year is cached
-        if (cachedYearlyMonthDays[year] == null) {
-            initializeForYear(year) // Initialize the year if not already cached
-        }
-        // Check if the month is cached
-        return cachedYearlyMonthDays[year]?.get(month) ?: getDaysInHijriMonth(year, month)
-    }
-
-    // Compute the number of days in a Hijri month and cache it
-    private fun getDaysInHijriMonth(year: Int, month: Int): Int {
-        // Check if the year is already cached
-        if (cachedYearlyMonthDays[year] == null) {
-            cachedYearlyMonthDays[year] = mutableMapOf() // Initialize the map for this year if not present
-        }
-
-        // Check if the month is already cached
-        val cachedDays = cachedYearlyMonthDays[year]?.get(month)
-        if (cachedDays != null) {
-            return cachedDays // Return cached number of days if available
-        }
-
-        // If not cached, calculate the number of days in the month
-        return try {
-            val hijriCalendar = IslamicCalendar(year, month, 1)
-            hijriCalendar.add(Calendar.MONTH, 1)
-            hijriCalendar.set(Calendar.DAY_OF_MONTH, 1)
-            hijriCalendar.add(Calendar.DAY_OF_MONTH, -1)
-            val daysInMonth = hijriCalendar.get(Calendar.DAY_OF_MONTH)
-
-            // Cache the result for future use
-            cachedYearlyMonthDays[year]?.put(month, daysInMonth)
-
-            daysInMonth // Return the calculated number of days
-        } catch (e: Exception) {
-            30 // Default to 30 days if there's an error
-        }
-    }
-}
-
-
-
-
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewHijriDatePickerButton() {
     // Get the current Hijri date
-    val currentHijriCalendar = IslamicCalendar()
-    val currentHijriYear = currentHijriCalendar.get(Calendar.YEAR)
-    val currentHijriMonth = currentHijriCalendar.get(Calendar.MONTH)
-    val currentHijriDay = currentHijriCalendar.get(Calendar.DAY_OF_MONTH)
 
-    HijriDatePickerButton(
-        initialYear = currentHijriYear,
-        initialMonth = currentHijriMonth,
-        initialDay = currentHijriDay
-    )
+
+    HijriDatePickerButton()
 }
 
 @Preview(showBackground = true)
