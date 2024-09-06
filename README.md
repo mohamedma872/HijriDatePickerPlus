@@ -1,6 +1,4 @@
-Here's an updated version of your README, reflecting the switch to using the `IslamicCalendar` instead of the Umm Al-Qura calendar and emphasizing its broader support:
 
----
 
 # HijriDatePickerPlus
 
@@ -64,6 +62,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For any questions or support regarding this project, you can contact the project maintainer at: [mohamed.ma872@gmail.com](mailto:mohamed.ma872@gmail.com)
 
----
+[![](https://jitpack.io/v/mohamedma872/HijriDatePickerPlus.svg)](https://jitpack.io/#mohamedma872/HijriDatePickerPlus)
 
-This README explains that the switch to the `IslamicCalendar` provides a more globally applicable solution, while still highlighting the key features and improvements of the Hijri Date Picker.
