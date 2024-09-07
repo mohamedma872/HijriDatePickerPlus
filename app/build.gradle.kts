@@ -66,8 +66,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(project(":HijriDatePickerLib"))
+   // implementation(project(":HijriDatePickerLib"))
 
-   // implementation ("com.github.mohamedma872:HijriDatePickerLib:1.0.0")
+    implementation ("com.github.mohamedma872:HijriDatePickerPlus:Development-SNAPSHOT")
 
 }
