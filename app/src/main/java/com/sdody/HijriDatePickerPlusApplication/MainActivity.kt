@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-           HijriDatePickerButton()
+            HijriDatePickerButton()
 
             // Example of how you can trigger the date picker from anywhere
           /*  showHijriDatePicker(
