@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.sdody.hijridatepickerpluslib.HijriDatePickerButton
 import java.util.Calendar
 
 class MainActivity : ComponentActivity() {
@@ -36,11 +37,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // Initialize Hijri calendar data for the selected year
 
-        println("Days in Muharram: ${getHijriDaysInMonth(1309, 0)}")
-        println("Days in Safar: ${getHijriDaysInMonth(1309, 1)}")
+       // println("Days in Muharram: ${getHijriDaysInMonth(1309, 0)}")
+       // println("Days in Safar: ${getHijriDaysInMonth(1309, 1)}")
 
         setContent {
-           // HijriDatePickerButton()
+
+           HijriDatePickerButton()
 
             // Example of how you can trigger the date picker from anywhere
           /*  showHijriDatePicker(
