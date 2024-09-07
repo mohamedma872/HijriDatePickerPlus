@@ -57,4 +57,15 @@ dependencies {
     implementation (libs.androidx.foundation)
     implementation (libs.android.joda)
 }
-
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from(components["release"])
+                groupId = "com.sdody"
+                artifactId = "hijridatepickerlib"
+                version = "1.0.0" // You can update this version as needed
+            }
+        }
+    }
+}
