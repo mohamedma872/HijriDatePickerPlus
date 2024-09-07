@@ -62,7 +62,7 @@ afterEvaluate {
         publications {
             create<MavenPublication>("maven") {
                 from(components["release"])
-                groupId = "com.sdody"
+                groupId = "com.github.mohamedma872"
                 artifactId = "hijridatepickerlib"
                 version = "1.0.0" // You can update this version as needed
             }
