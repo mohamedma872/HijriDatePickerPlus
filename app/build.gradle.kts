@@ -75,6 +75,6 @@ dependencies {
     implementation (libs.kotlinx.coroutines.core)
     implementation (libs.kotlinx.coroutines.android)
 
-    implementation ("com.github.mohamedma872:HijriDatePickerPlus:v1.0.1")
+   // implementation ("com.github.mohamedma872:HijriDatePickerPlus:v1.0.1")
 
 }
