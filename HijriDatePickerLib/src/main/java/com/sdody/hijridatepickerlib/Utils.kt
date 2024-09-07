@@ -1,7 +1,8 @@
-package com.sdody.HijriDatePickerPlusApplication
+package com.sdody.hijridatepickerpluslib
 
 import android.icu.util.IslamicCalendar
 import java.util.Calendar
+
 
 // Helper function to get weekday name
 fun getWeekday(islamicCalendar: IslamicCalendar): String {
@@ -64,7 +65,6 @@ fun getHijriDaysInMonth(year: Int, month: Int): Int {
         30 // Default to 30 days if there's an error
     }
 }
-
 
 object HijriCalendarDataCache {
 
