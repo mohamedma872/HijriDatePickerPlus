@@ -107,6 +107,84 @@ val currentHijriDay = currentHijriCalendar.get(Calendar.DAY_OF_MONTH)
 println("Current Hijri Date: $currentHijriDay-${getHijriMonthName(currentHijriMonth)}-$currentHijriYear")
 ```
 
+
+
+## How to Use the Library
+
+To use **HijriDatePickerPlus** in your Android project, follow these steps:
+
+### 1. Add the Dependency
+
+First, add the dependency to your project's `build.gradle` file. Make sure your project is set up to use JitPack by adding the JitPack repository in your `settings.gradle` or `build.gradle` (for Gradle version catalog users, include this in your version catalog file):
+
+```groovy
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
+}
+```
+
+Then, add the following to your app-level `build.gradle` file under `dependencies`:
+
+```groovy
+dependencies {
+    implementation 'com.github.mohamedma872:HijriDatePickerPlus:Tag'
+}
+```
+
+Replace `Tag` with the latest version, which you can find [here](https://jitpack.io/#mohamedma872/HijriDatePickerPlus).
+
+### 2. Initialize and Display the Hijri Date Picker
+
+To use the date picker, simply call the **HijriDatePickerPlus** component in your Composable function. Here's an example of how to integrate it into your app:
+
+```kotlin
+@Composable
+fun ShowHijriDatePicker() {
+// you can use that :
+
+ HijriDatePickerButton()
+
+OR
+    showHijriDatePicker(
+                initialYear = 1446, // Pass the initial year, e.g., current Hijri year
+                initialMonth = 1,   // Initial month
+                initialDay = 10,    // Initial day
+                onDateSelected = { year, month, day ->
+                    // Handle date selected (year, month, day)
+                    println("Selected Date: $day-${getHijriMonthName(month)}-$year")
+                },
+                onConfirm = {
+                    // Handle confirm click
+                    println("Date Picker Confirmed")
+                },
+                onDismissRequest = {
+                    // Handle dismiss
+                    println("Date Picker Dismissed")
+                }
+            )
+}
+```
+```kotlin
+// Get the current Hijri date
+    val currentHijriCalendar = IslamicCalendar()
+    val currentHijriYear = currentHijriCalendar.get(Calendar.YEAR)
+    val currentHijriMonth = currentHijriCalendar.get(Calendar.MONTH)
+    val currentHijriDay = currentHijriCalendar.get(Calendar.DAY_OF_MONTH)
+```
+### 3. Customize the Picker
+
+You can modify the picker to suit your design needs by adjusting properties such as:
+
+- **Year/Month/Day Display**: You can modify the visual appearance by changing the text size, colors, and layout in the `HeaderSection`, `YearSelectionScreen`, and `FooterSection` components.
+- **Hijri Calendar**: The library uses the `IslamicCalendar` class for date calculations. You can directly interact with this class if you need further customization or region-specific adjustments.
+
+
+
 ## Fixes and Solutions
 
 **HijriDatePickerPlus** implements a critical fix for date validation in the Hijri calendar, ensuring that selecting a day beyond the valid number of days in a month (e.g., selecting the 30th day in a month with only 29 days) doesn't cause the app to crash. The picker automatically adjusts the selected day to the correct number of days in each month.

@@ -28,7 +28,8 @@ fun MonthGridWithDays(
     selectedYear: Int,
     onDaySelected: (Int, Int, Int) -> Unit,
     preselectedMonth: Int,
-    preselectedDay: Int
+    preselectedDay: Int,
+    calendarType : String
 ) {
     // State to track the selected day and month
     var selectedMonthState by remember { mutableStateOf(preselectedMonth) }
@@ -47,7 +48,7 @@ fun MonthGridWithDays(
             )
 
             // Retrieve cached days for the current month
-            val daysInMonth = HijriCalendarDataCache.getDaysForMonth(selectedYear, month)
+            val daysInMonth = HijriCalendarDataCache.getDaysForMonth(selectedYear, month, calendarType = calendarType)
 
             // Wrapping LazyVerticalGrid in a fixed height to avoid performance issues
             Box(

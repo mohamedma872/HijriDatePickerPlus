@@ -1,6 +1,6 @@
 package com.sdody.hijridatepickerpluslib
 
-import android.icu.util.IslamicCalendar
+import android.icu.util.Calendar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +29,8 @@ fun HijriDatePickerDialogWithThreeSections(
     onDateSelected: (Int, Int, Int) -> Unit,
     onConfirm: () -> Unit,
     onDismissRequest: () -> Unit,
-    initialShowYearSelection: Boolean = true // Always show year selection when opening the dialog
+    initialShowYearSelection: Boolean = true, // Always show year selection when opening the dialog
+    calendarType: String
 ) {
     var selectedYear by remember { mutableStateOf(initialYear) }
     var selectedMonth by remember { mutableStateOf(initialMonth) }
@@ -37,7 +38,7 @@ fun HijriDatePickerDialogWithThreeSections(
     var showYearSelection by remember { mutableStateOf(initialShowYearSelection) }
 
     // Ensure selected day is valid for the selected month
-    val daysInMonth = getHijriDaysInMonth(selectedYear, selectedMonth)
+    val daysInMonth = getHijriDaysInMonth(selectedYear, selectedMonth,calendarType)
     if (selectedDay > daysInMonth) {
         selectedDay = daysInMonth
     }
@@ -51,10 +52,13 @@ fun HijriDatePickerDialogWithThreeSections(
                 modifier = Modifier.fillMaxWidth().background(Color.White)
             ) {
                 // Header section with the selected date
-                val cal = IslamicCalendar(selectedYear, selectedMonth, selectedDay)
-
+                val calendar = getIslamicCalendar(calendarType)
+                // Set the specific year, month, and day on the calendar instance
+                calendar.set(Calendar.YEAR, selectedYear)
+                calendar.set(Calendar.MONTH, selectedMonth)
+                calendar.set(Calendar.DAY_OF_MONTH, selectedDay)
                 // Pass the callback to trigger year selection
-                HeaderSection(islamicCalendar = cal) {
+                HeaderSection(calendar = calendar) {
                     showYearSelection = true // Toggle to show year selection when the year is clicked
                 }
 
@@ -84,7 +88,8 @@ fun HijriDatePickerDialogWithThreeSections(
                                 onDateSelected(year, month, day)
                             },
                             preselectedMonth = selectedMonth, // Pass the preselected month
-                            preselectedDay = selectedDay // Pass the preselected day
+                            preselectedDay = selectedDay, // Pass the preselected day
+                            calendarType = calendarType
                         )
                     }
                 }

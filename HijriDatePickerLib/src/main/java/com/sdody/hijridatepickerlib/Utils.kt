@@ -1,12 +1,38 @@
 package com.sdody.hijridatepickerpluslib
 
-import android.icu.util.IslamicCalendar
-import java.util.Calendar
+import android.icu.util.Calendar
+import android.icu.util.ULocale
+
+
+fun getIslamicCalendar(calendarType: String): Calendar {
+    return when (calendarType.lowercase()) {
+        "umalqura" -> {
+            // Umm al-Qura Calendar (specific to Saudi Arabia)
+            val umalquraLocale = ULocale("@calendar=islamic-umalqura")
+            Calendar.getInstance(umalquraLocale)
+        }
+        "civil" -> {
+            // Islamic Civil Calendar (tabular)
+            val islamicCivilLocale = ULocale("@calendar=islamic-civil")
+            Calendar.getInstance(islamicCivilLocale)
+        }
+        "islamic" -> {
+            // General Islamic Lunar Calendar
+            val islamicLocale = ULocale("@calendar=islamic")
+            Calendar.getInstance(islamicLocale)
+        }
+        else -> {
+            // Default to the general Islamic Lunar Calendar if an unrecognized type is passed
+            val islamicLocale = ULocale("@calendar=islamic")
+            Calendar.getInstance(islamicLocale)
+        }
+    }
+}
 
 
 // Helper function to get weekday name
-fun getWeekday(islamicCalendar: IslamicCalendar): String {
-    return when (islamicCalendar.get(Calendar.DAY_OF_WEEK)) {
+fun getWeekday(calendar: Calendar): String {
+    return when (calendar.get(Calendar.DAY_OF_WEEK)) {
         Calendar.SUNDAY -> "Sunday"
         Calendar.MONDAY -> "Monday"
         Calendar.TUESDAY -> "Tuesday"
@@ -54,17 +80,30 @@ fun getHijriMonthName(month: Int): String {
     }
 }
 
-fun getHijriDaysInMonth(year: Int, month: Int): Int {
+fun getHijriDaysInMonth(year: Int, month: Int, calendarType: String): Int {
     return try {
-        val hijriCalendar = IslamicCalendar(year, month, 1)
-        hijriCalendar.add(Calendar.MONTH, 1)
-        hijriCalendar.set(Calendar.DAY_OF_MONTH, 1)
-        hijriCalendar.add(Calendar.DAY_OF_MONTH, -1)
-        hijriCalendar.get(Calendar.DAY_OF_MONTH)
+        // Get the Islamic Calendar instance based on the type
+        val islamicCalendarInstance = getIslamicCalendar(calendarType)
+
+        // Set the year and month
+        islamicCalendarInstance.set(Calendar.YEAR, year)
+        islamicCalendarInstance.set(Calendar.MONTH, month)
+
+        // Move to the next month and reset to the first day
+        islamicCalendarInstance.add(Calendar.MONTH, 1)
+        islamicCalendarInstance.set(Calendar.DAY_OF_MONTH, 1)
+
+        // Subtract a day to get the last day of the original month
+        islamicCalendarInstance.add(Calendar.DAY_OF_MONTH, -1)
+
+        // Return the last day of the original month, which gives the number of days
+        islamicCalendarInstance.get(Calendar.DAY_OF_MONTH)
     } catch (e: Exception) {
-        30 // Default to 30 days if there's an error
+        // Return 30 days as default in case of an error
+        30
     }
 }
+
 
 object HijriCalendarDataCache {
 
@@ -72,27 +111,28 @@ object HijriCalendarDataCache {
     private val cachedYearlyMonthDays = mutableMapOf<Int, MutableMap<Int, Int>>() // Changed to store Int instead of List<Int>
 
     // Precompute all the months and their number of days for the given year
-    fun initializeForYear(year: Int) {
+    fun initializeForYear(year: Int,calendarType: String) {
         if (cachedYearlyMonthDays[year] == null) {
             cachedYearlyMonthDays[year] = mutableMapOf()
             for (month in 0..11) {
-                cachedYearlyMonthDays[year]?.set(month, getDaysInHijriMonth(year, month))
+                cachedYearlyMonthDays[year]?.set(month, getDaysInHijriMonthCashed(year = year, month = month, calendarType = calendarType))
             }
         }
     }
 
     // Retrieve cached number of days for a given year and month, and calculate if not cached
-    fun getDaysForMonth(year: Int, month: Int): Int {
+    fun getDaysForMonth(year: Int, month: Int,calendarType: String): Int {
         // Check if the year is cached
         if (cachedYearlyMonthDays[year] == null) {
-            initializeForYear(year) // Initialize the year if not already cached
+            initializeForYear(year,calendarType) // Initialize the year if not already cached
         }
         // Check if the month is cached
-        return cachedYearlyMonthDays[year]?.get(month) ?: getDaysInHijriMonth(year, month)
+        return cachedYearlyMonthDays[year]?.get(month) ?: getDaysInHijriMonthCashed(year = year, month = month,
+            calendarType = calendarType)
     }
 
     // Compute the number of days in a Hijri month and cache it
-    private fun getDaysInHijriMonth(year: Int, month: Int): Int {
+    private fun getDaysInHijriMonthCashed(year: Int, month: Int,calendarType: String): Int {
         // Check if the year is already cached
         if (cachedYearlyMonthDays[year] == null) {
             cachedYearlyMonthDays[year] = mutableMapOf() // Initialize the map for this year if not present
@@ -106,11 +146,8 @@ object HijriCalendarDataCache {
 
         // If not cached, calculate the number of days in the month
         return try {
-            val hijriCalendar = IslamicCalendar(year, month, 1)
-            hijriCalendar.add(Calendar.MONTH, 1)
-            hijriCalendar.set(Calendar.DAY_OF_MONTH, 1)
-            hijriCalendar.add(Calendar.DAY_OF_MONTH, -1)
-            val daysInMonth = hijriCalendar.get(Calendar.DAY_OF_MONTH)
+
+            val daysInMonth = getHijriDaysInMonth(year = year, month = month, calendarType = calendarType)
 
             // Cache the result for future use
             cachedYearlyMonthDays[year]?.put(month, daysInMonth)
