@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.tooling.preview.Preview
 
 // Example of how you can trigger the date picker from anywhere
 /*  showHijriDatePicker(
@@ -69,4 +70,25 @@ fun showHijriDatePicker(
             calendarType = calendarType // "umalqura", "civil", or "islamic"
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewHijriDatePicker() {
+    // Preview the Hijri Date Picker with some predefined values
+    showHijriDatePicker(
+        initialYear = 1445,  // Initial year in Hijri calendar
+        initialMonth = 1,    // Safar (0-indexed month)
+        initialDay = 1,      // 1st day of Safar
+        onDateSelected = { year, month, day ->
+            // Handle date selection (preview action)
+        },
+        onConfirm = { year, month, day ->
+            // Handle confirmation (preview action)
+        },
+        onDismissRequest = {
+            // Handle dismissal (preview action)
+        },
+        calendarType = "umalqura"  // Calendar type for preview
+    )
 }

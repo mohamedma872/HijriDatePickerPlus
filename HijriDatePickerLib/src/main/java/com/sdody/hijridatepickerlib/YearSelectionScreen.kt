@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -57,4 +58,16 @@ fun YearSelectionScreen(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewYearSelectionScreen() {
+    YearSelectionScreen(
+        selectedYear = 1445, // Preselected year
+        onYearSelected = { year ->
+            // Handle year selection (preview action)
+        },
+        currentYear = 1445 // Scroll to this year by default
+    )
 }

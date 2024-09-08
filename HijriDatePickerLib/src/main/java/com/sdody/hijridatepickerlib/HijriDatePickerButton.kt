@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -85,4 +86,11 @@ fun HijriDatePickerButton(
             "umalqura" // "umalqura", "civil", or "islamic"
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewHijriDatePickerButton() {
+    // Preview the HijriDatePickerButton with "umalqura" as calendar type
+    HijriDatePickerButton(calendarType = "umalqura")
 }

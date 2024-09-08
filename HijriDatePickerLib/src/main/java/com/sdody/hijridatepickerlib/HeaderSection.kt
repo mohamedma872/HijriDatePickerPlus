@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -43,4 +44,20 @@ fun HeaderSection(calendar: Calendar, onYearClick: () -> Unit) {
             modifier = Modifier.clickable { onYearClick() } // Trigger year selection when the year is clicked
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewHeaderSection() {
+    // Creating an instance of IslamicCalendar for preview purposes
+    val calendar = IslamicCalendar().apply {
+        set(Calendar.YEAR, 1445)
+        set(Calendar.MONTH, 1) // Safar
+        set(Calendar.DAY_OF_MONTH, 5)
+    }
+
+    // Preview the HeaderSection with a mock IslamicCalendar and a simple onYearClick action
+    HeaderSection(calendar = calendar, onYearClick = {
+        // Handle year click in preview
+    })
 }

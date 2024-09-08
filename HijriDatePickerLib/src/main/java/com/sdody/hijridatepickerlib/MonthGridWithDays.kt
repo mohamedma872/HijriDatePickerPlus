@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -79,4 +80,18 @@ fun MonthGridWithDays(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewMonthGridWithDays() {
+    MonthGridWithDays(
+        selectedYear = 1445,  // Example year
+        onDaySelected = { year, month, day ->
+            // Handle day selection (preview action)
+        },
+        preselectedMonth = 1,  // Safar (0-indexed month)
+        preselectedDay = 5,    // Preselected day
+        calendarType = "umalqura"  // Calendar type for preview
+    )
 }
