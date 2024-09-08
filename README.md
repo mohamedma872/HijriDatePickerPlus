@@ -1,6 +1,5 @@
-Here’s the updated README with the additional section mentioning the `getIslamicCalendar` function and how to get the current date based on the calendar type:
+![1725800829380](https://github.com/user-attachments/assets/bfc62b89-41bd-4cc1-bb18-44ac901b2a03)
 
----
 
 # HijriDatePickerPlus
 
