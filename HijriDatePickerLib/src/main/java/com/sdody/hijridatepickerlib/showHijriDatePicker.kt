@@ -8,31 +8,33 @@ import androidx.compose.runtime.setValue
 
 // Example of how you can trigger the date picker from anywhere
 /*  showHijriDatePicker(
-      initialYear = 1446, // Pass the initial year, e.g., current Hijri year
-      initialMonth = 1,   // Initial month
-      initialDay = 10,    // Initial day
-      onDateSelected = { year, month, day ->
-          // Handle date selected (year, month, day)
-          println("Selected Date: $day-${getHijriMonthName(month)}-$year")
-      },
-      onConfirm = {
-          // Handle confirm click
-          println("Date Picker Confirmed")
-      },
-      onDismissRequest = {
-          // Handle dismiss
-          println("Date Picker Dismissed")
-      }
-  )*/
-
+    initialYear = 1445,
+    initialMonth = 1,
+    initialDay = 1,
+    onDateSelected = { year, month, day ->
+        // Handle date selection changes
+        println("Selected date: $year-$month-$day")
+    },
+    onConfirm = { year, month, day ->
+        // Handle the final confirmed date here
+        println("Confirmed date: $year-$month-$day")
+    },
+    onDismissRequest = {
+        // Handle dialog dismissal without confirmation
+        println("Date picker dismissed")
+    },
+    calendarType = "umalqura" // Use "umalqura", "civil", or "islamic"
+)
+*/
 @Composable
 fun showHijriDatePicker(
     initialYear: Int,
     initialMonth: Int,
     initialDay: Int,
     onDateSelected: (Int, Int, Int) -> Unit,
-    onConfirm: () -> Unit,
-    onDismissRequest: () -> Unit
+    onConfirm: (Int, Int, Int) -> Unit, // Modify to pass the selected date on confirm
+    onDismissRequest: () -> Unit,
+    calendarType: String
 ) {
     // State for preselected date
     val preselectedYear = remember { mutableStateOf(initialYear) }
@@ -56,13 +58,15 @@ fun showHijriDatePicker(
             },
             onConfirm = {
                 showDialog = false // Close the dialog when Confirm is clicked
-                onConfirm() // Call the confirm callback
+                // Pass the selected date to the confirm callback
+                onConfirm(preselectedYear.value, preselectedMonth.value, preselectedDay.value)
             },
             onDismissRequest = {
                 showDialog = false // Close the dialog when dismissed
                 onDismissRequest() // Call the dismiss callback
             },
-            initialShowYearSelection = true // Always show year selection first
+            initialShowYearSelection = true, // Always show year selection first
+            calendarType = calendarType // "umalqura", "civil", or "islamic"
         )
     }
 }
