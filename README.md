@@ -225,3 +225,6 @@ For any questions or support regarding this project, you can contact the project
 
 [![](https://jitpack.io/v/mohamedma872/HijriDatePickerPlus.svg)](https://jitpack.io/#mohamedma872/HijriDatePickerPlus)
 
+---
+
+This updated README includes the mention of the `getIslamicCalendar` function and an example of how to use it to get the current Hijri date. Let me know if you need any further adjustments!

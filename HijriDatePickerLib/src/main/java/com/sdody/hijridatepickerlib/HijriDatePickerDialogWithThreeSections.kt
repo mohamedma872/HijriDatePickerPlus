@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
@@ -107,3 +108,22 @@ fun HijriDatePickerDialogWithThreeSections(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun PreviewHijriDatePickerDialogWithThreeSections() {
+    HijriDatePickerDialogWithThreeSections(
+        initialYear = 1445, // Initial Hijri year
+        initialMonth = 1,   // Safar (month index starts at 0)
+        initialDay = 5,     // 5th day of Safar
+        onDateSelected = { year, month, day ->
+            // Handle date selection (preview action)
+        },
+        onConfirm = {
+            // Handle confirm action (preview action)
+        },
+        onDismissRequest = {
+            // Handle dismiss action (preview action)
+        },
+        calendarType = "umalqura" // Simulate the "umalqura" calendar type for preview
+    )
+}
