@@ -1,6 +1,7 @@
 package com.sdody.hijridatepickerpluslib
 
-import android.icu.util.IslamicCalendar
+import android.icu.util.Calendar
+import android.icu.util.ULocale
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -16,19 +17,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.util.Calendar
 
 @Composable
 fun HijriDatePickerButton(
-
+    calendarType: String
 ) {
+    val currentHijriCalendar = getIslamicCalendar(calendarType)
     // Get the current Hijri date
-    val currentHijriCalendar = IslamicCalendar()
+    // val currentHijriCalendar = IslamicCalendar()
     val currentHijriYear = currentHijriCalendar.get(Calendar.YEAR)
     val currentHijriMonth = currentHijriCalendar.get(Calendar.MONTH)
     val currentHijriDay = currentHijriCalendar.get(Calendar.DAY_OF_MONTH)
 
-    HijriCalendarDataCache.initializeForYear(currentHijriYear)
+    HijriCalendarDataCache.initializeForYear(currentHijriYear, calendarType = "umalqura")
 
     // State to hold the selected Hijri date, starting with the current Hijri date
     val selectedDate = remember { mutableStateOf("$currentHijriDay-${getHijriMonthName(currentHijriMonth)}-$currentHijriDay") }
@@ -80,7 +81,8 @@ fun HijriDatePickerButton(
             onDismissRequest = {
                 showDialog = false // Close the dialog when Cancel is clicked or dismissed
             },
-            initialShowYearSelection = true // Always show year selection first
+            initialShowYearSelection = true, // Always show year selection first
+            "umalqura" // "umalqura", "civil", or "islamic"
         )
     }
 }
