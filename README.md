@@ -62,6 +62,9 @@ To use the date picker, simply call the **HijriDatePickerPlus** component in you
 @Composable
 fun ShowHijriDatePicker() {
     // Example of how to trigger the date picker using different calendar types
+ HijriDatePickerButton()
+
+OR
     showHijriDatePicker(
         initialYear = 1446, // Pass the initial year, e.g., current Hijri year
         initialMonth = 1,   // Initial month
@@ -108,69 +111,7 @@ println("Current Hijri Date: $currentHijriDay-${getHijriMonthName(currentHijriMo
 
 
 
-## How to Use the Library
-
-To use **HijriDatePickerPlus** in your Android project, follow these steps:
-
-### 1. Add the Dependency
-
-First, add the dependency to your project's `build.gradle` file. Make sure your project is set up to use JitPack by adding the JitPack repository in your `settings.gradle` or `build.gradle` (for Gradle version catalog users, include this in your version catalog file):
-
-```groovy
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven { url = uri("https://jitpack.io") }
-    }
-}
-```
-
-Then, add the following to your app-level `build.gradle` file under `dependencies`:
-
-```groovy
-dependencies {
-    implementation 'com.github.mohamedma872:HijriDatePickerPlus:Tag'
-}
-```
-
-Replace `Tag` with the latest version, which you can find [here](https://jitpack.io/#mohamedma872/HijriDatePickerPlus).
-
-### 2. Initialize and Display the Hijri Date Picker
-
-To use the date picker, simply call the **HijriDatePickerPlus** component in your Composable function. Here's an example of how to integrate it into your app:
-
-```kotlin
-@Composable
-fun ShowHijriDatePicker() {
-// you can use that :
-
- HijriDatePickerButton()
-
-OR
-     showHijriDatePicker(
-        initialYear = 1446, // Pass the initial year, e.g., current Hijri year
-        initialMonth = 1,   // Initial month
-        initialDay = 10,    // Initial day
-        onDateSelected = { year, month, day ->
-            // Handle date selected (year, month, day)
-            println("Selected Date: $day-${getHijriMonthName(month)}-$year")
-        },
-        onConfirm = { year, month, day ->
-            // Handle the final confirmed date
-            println("Confirmed Date: $day-${getHijriMonthName(month)}-$year")
-        },
-        onDismissRequest = {
-            // Handle the dismiss action
-            println("Date Picker Dismissed")
-        },
-        calendarType = "umalqura" // Use "umalqura", "civil", or "islamic"
-    )
-}
-```
-
-### 3. Customize the Picker
+### 4. Customize the Picker
 
 You can modify the picker to suit your design needs by adjusting properties such as:
 
