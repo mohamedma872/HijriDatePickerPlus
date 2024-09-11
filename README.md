@@ -169,13 +169,7 @@ OR
     )
 }
 ```
-```kotlin
-// Get the current Hijri date
-    val currentHijriCalendar = IslamicCalendar()
-    val currentHijriYear = currentHijriCalendar.get(Calendar.YEAR)
-    val currentHijriMonth = currentHijriCalendar.get(Calendar.MONTH)
-    val currentHijriDay = currentHijriCalendar.get(Calendar.DAY_OF_MONTH)
-```
+
 ### 3. Customize the Picker
 
 You can modify the picker to suit your design needs by adjusting properties such as:
