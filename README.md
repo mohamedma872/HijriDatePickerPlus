@@ -149,23 +149,24 @@ fun ShowHijriDatePicker() {
  HijriDatePickerButton()
 
 OR
-    showHijriDatePicker(
-                initialYear = 1446, // Pass the initial year, e.g., current Hijri year
-                initialMonth = 1,   // Initial month
-                initialDay = 10,    // Initial day
-                onDateSelected = { year, month, day ->
-                    // Handle date selected (year, month, day)
-                    println("Selected Date: $day-${getHijriMonthName(month)}-$year")
-                },
-                onConfirm = {
-                    // Handle confirm click
-                    println("Date Picker Confirmed")
-                },
-                onDismissRequest = {
-                    // Handle dismiss
-                    println("Date Picker Dismissed")
-                }
-            )
+     showHijriDatePicker(
+        initialYear = 1446, // Pass the initial year, e.g., current Hijri year
+        initialMonth = 1,   // Initial month
+        initialDay = 10,    // Initial day
+        onDateSelected = { year, month, day ->
+            // Handle date selected (year, month, day)
+            println("Selected Date: $day-${getHijriMonthName(month)}-$year")
+        },
+        onConfirm = { year, month, day ->
+            // Handle the final confirmed date
+            println("Confirmed Date: $day-${getHijriMonthName(month)}-$year")
+        },
+        onDismissRequest = {
+            // Handle the dismiss action
+            println("Date Picker Dismissed")
+        },
+        calendarType = "umalqura" // Use "umalqura", "civil", or "islamic"
+    )
 }
 ```
 ```kotlin
