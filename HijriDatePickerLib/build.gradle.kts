@@ -44,7 +44,7 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
+   // implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
@@ -54,7 +54,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation( libs.material3)
     implementation (libs.material)
-    implementation (libs.androidx.lifecycle.runtime.ktx.v231)
+   // implementation (libs.androidx.lifecycle.runtime.ktx.v231)
     implementation (libs.androidx.foundation)
     implementation (libs.android.joda)
 }
