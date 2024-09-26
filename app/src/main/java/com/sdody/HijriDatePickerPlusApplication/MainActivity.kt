@@ -21,18 +21,27 @@ class MainActivity : ComponentActivity() {
         setContent {
            // Use "umalqura", "civil", or "islamic"
            // HijriDatePickerButton(calendarType = "umalqura")
+            var lastSelectedYear = 1445
+            var lastSelectedMonth = 1
+            var lastSelectedDay = 1
 
             // Example of how you can trigger the date picker from anywhere
             showHijriDatePicker(
-                initialYear = 1445,
-                initialMonth = 1,
-                initialDay = 1,
+                initialYear = lastSelectedYear,
+                initialMonth = lastSelectedMonth,
+                initialDay = lastSelectedDay,
                 onDateSelected = { year, month, day ->
                     // Handle date selection changes
+                    lastSelectedYear = year
+                    lastSelectedMonth = month
+                    lastSelectedDay = day
                     println("Selected date: $year-$month-$day")
                 },
                 onConfirm = { year, month, day ->
                     // Handle the final confirmed date here
+                    lastSelectedYear = year
+                    lastSelectedMonth = month
+                    lastSelectedDay = day
                     println("Confirmed date: $year-$month-$day")
                 },
                 onDismissRequest = {

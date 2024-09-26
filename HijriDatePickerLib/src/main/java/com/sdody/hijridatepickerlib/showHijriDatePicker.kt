@@ -37,40 +37,33 @@ fun showHijriDatePicker(
     onDismissRequest: () -> Unit,
     calendarType: String
 ) {
-    // State for preselected date
-    val preselectedYear = remember { mutableStateOf(initialYear) }
-    val preselectedMonth = remember { mutableStateOf(initialMonth) }
-    val preselectedDay = remember { mutableStateOf(initialDay) }
-
-    // Dialog visibility is controlled outside (no button, it will be triggered by external events)
+    // The showDialog state is controlled outside, as this Composable doesn't have buttons.
     var showDialog by remember { mutableStateOf(true) }
 
     if (showDialog) {
         HijriDatePickerDialogWithThreeSections(
-            initialYear = preselectedYear.value,
-            initialMonth = preselectedMonth.value,
-            initialDay = preselectedDay.value,
+            initialYear = initialYear,    // Preselected year from the lifted state
+            initialMonth = initialMonth,  // Preselected month from the lifted state
+            initialDay = initialDay,      // Preselected day from the lifted state
             onDateSelected = { year, month, day ->
-                // Update the preselected date for the next opening
-                preselectedYear.value = year
-                preselectedMonth.value = month
-                preselectedDay.value = day
-                onDateSelected(year, month, day) // Call the provided callback
+                // Update the selected date in the parent
+                onDateSelected(year, month, day)
             },
-            onConfirm = {
-                showDialog = false // Close the dialog when Confirm is clicked
+            onConfirm = { year, month, day ->
+                showDialog = false  // Close the dialog when Confirm is clicked
                 // Pass the selected date to the confirm callback
-                onConfirm(preselectedYear.value, preselectedMonth.value, preselectedDay.value)
+                onConfirm(year, month, day)
             },
             onDismissRequest = {
-                showDialog = false // Close the dialog when dismissed
-                onDismissRequest() // Call the dismiss callback
+                showDialog = false  // Close the dialog when dismissed
+                onDismissRequest()  // Call the dismiss callback
             },
             initialShowYearSelection = true, // Always show year selection first
-            calendarType = calendarType // "umalqura", "civil", or "islamic"
+            calendarType = calendarType // Calendar type ("umalqura", "civil", or "islamic")
         )
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
