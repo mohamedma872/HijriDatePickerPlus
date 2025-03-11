@@ -1,4 +1,3 @@
-![1725800829380](https://github.com/user-attachments/assets/bfc62b89-41bd-4cc1-bb18-44ac901b2a03)
 
 
 # HijriDatePickerPlus
@@ -24,6 +23,7 @@ While the **Umm Al-Qura** calendar is specific to Saudi Arabia and suitable for 
 2. Open the project in Android Studio.
 3. Build and run the project on an Android device or emulator.
 4. Incorporate the Hijri date picker into your project by copying the necessary components from the codebase.
+
 
 ## How to Use the Library
 

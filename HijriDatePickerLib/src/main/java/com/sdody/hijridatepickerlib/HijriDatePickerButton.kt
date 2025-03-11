@@ -76,7 +76,7 @@ fun HijriDatePickerButton(
                 preselectedMonth.value = month
                 preselectedDay.value = day
             },
-            onConfirm = {
+            onConfirm = { year, month, day ->
                 showDialog = false // Close the dialog when Confirm is clicked
             },
             onDismissRequest = {

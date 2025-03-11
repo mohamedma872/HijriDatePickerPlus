@@ -27,6 +27,7 @@ fun MainScreen() {
     var selectedCalendarType by remember { mutableStateOf("umalqura") }
     var showDatePicker by remember { mutableStateOf(false) } // State to control dialog visibility
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,13 +48,15 @@ fun MainScreen() {
             Text("Show Hijri Date Picker")
         }
 
+
         // Show the date picker dialog when showDatePicker is true
         if (showDatePicker) {
             showHijriDatePicker(
-                initialYear = 1445,
-                initialMonth = 1,
-                initialDay = 1,
+                initialYear = lastSelectedYear,
+                initialMonth = lastSelectedMonth,
+                initialDay = lastSelectedDay,
                 onDateSelected = { year, month, day ->
+
                     println("Selected date: $year-$month-$day")
                 },
                 onConfirm = { year, month, day ->
