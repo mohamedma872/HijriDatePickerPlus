@@ -23,25 +23,27 @@ import androidx.compose.ui.unit.sp
 fun HijriDatePickerButton(
     calendarType: String
 ) {
+    // Get the calendar instance based on the provided calendarType
     val currentHijriCalendar = getIslamicCalendar(calendarType)
-    // Get the current Hijri date
-    // val currentHijriCalendar = IslamicCalendar()
     val currentHijriYear = currentHijriCalendar.get(Calendar.YEAR)
     val currentHijriMonth = currentHijriCalendar.get(Calendar.MONTH)
     val currentHijriDay = currentHijriCalendar.get(Calendar.DAY_OF_MONTH)
 
-    HijriCalendarDataCache.initializeForYear(currentHijriYear, calendarType = "umalqura")
+    // Initialize the Hijri calendar cache using the passed calendar type
+    HijriCalendarDataCache.initializeForYear(currentHijriYear, calendarType = calendarType)
 
-    // State to hold the selected Hijri date, starting with the current Hijri date
-    val selectedDate = remember { mutableStateOf("$currentHijriDay-${getHijriMonthName(currentHijriMonth)}-$currentHijriDay") }
+    // Use remember keyed on calendarType so that the state resets when the type changes.
+    val selectedDate = remember(calendarType) {
+        mutableStateOf("$currentHijriDay-${getHijriMonthName(currentHijriMonth)}-$currentHijriYear")
+    }
 
     // State to control dialog visibility
     var showDialog by remember { mutableStateOf(false) }
 
     // State for preselected date (used when reopening the picker)
-    val preselectedYear = remember { mutableStateOf(currentHijriYear) }
-    val preselectedMonth = remember { mutableStateOf(currentHijriMonth) }
-    val preselectedDay = remember { mutableStateOf(currentHijriDay) }
+    val preselectedYear = remember(calendarType) { mutableStateOf(currentHijriYear) }
+    val preselectedMonth = remember(calendarType) { mutableStateOf(currentHijriMonth) }
+    val preselectedDay = remember(calendarType) { mutableStateOf(currentHijriDay) }
 
     // Center the button in a Box
     Box(
@@ -83,7 +85,7 @@ fun HijriDatePickerButton(
                 showDialog = false // Close the dialog when Cancel is clicked or dismissed
             },
             initialShowYearSelection = true, // Always show year selection first
-            "umalqura" // "umalqura", "civil", or "islamic"
+            calendarType // Use the passed-in calendarType ("umalqura", "civil", or "islamic")
         )
     }
 }

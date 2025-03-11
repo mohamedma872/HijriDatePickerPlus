@@ -25,8 +25,24 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen() {
     var selectedCalendarType by remember { mutableStateOf("umalqura") }
-    var showDatePicker by remember { mutableStateOf(false) } // State to control dialog visibility
+    var showDatePicker by remember { mutableStateOf(false) }
 
+    // Derived state to compute the current date for the selected calendar type.
+    // This recomputes whenever selectedCalendarType changes.
+    val (initialYear, initialMonth, initialDay) = remember(selectedCalendarType) {
+        val locale = when (selectedCalendarType) {
+            "umalqura" -> ULocale("@calendar=islamic-umalqura")
+            "civil" -> ULocale("@calendar=islamic-civil")
+            "islamic" -> ULocale("@calendar=islamic")
+            else -> ULocale("@calendar=islamic-umalqura")
+        }
+        val calendar = Calendar.getInstance(locale)
+        Triple(
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -37,10 +53,14 @@ fun MainScreen() {
         // Dropdown to select calendar type
         CalendarTypeSelector(
             selectedType = selectedCalendarType,
-            onTypeSelected = { selectedCalendarType = it }
+            onTypeSelected = { newType ->
+                selectedCalendarType = newType
+                // Optionally, if you want to force the dialog to close when switching calendars:
+                showDatePicker = false
+            }
         )
 
-        // Hijri Date Picker Button with dynamic calendar type
+        // Button for Hijri Date Picker with dynamic calendar type
         HijriDatePickerButton(calendarType = selectedCalendarType)
 
         // Button to trigger the date picker dialog
@@ -48,27 +68,28 @@ fun MainScreen() {
             Text("Show Hijri Date Picker")
         }
 
-
-        // Show the date picker dialog when showDatePicker is true
+        // Wrap the date picker dialog with a key that depends on selectedCalendarType.
+        // This forces a recomposition of the dialog when the calendar type changes.
         if (showDatePicker) {
-            showHijriDatePicker(
-                initialYear = lastSelectedYear,
-                initialMonth = lastSelectedMonth,
-                initialDay = lastSelectedDay,
-                onDateSelected = { year, month, day ->
-
-                    println("Selected date: $year-$month-$day")
-                },
-                onConfirm = { year, month, day ->
-                    println("Confirmed date: $year-$month-$day")
-                    showDatePicker = false // Close dialog on confirm
-                },
-                onDismissRequest = {
-                    println("Date picker dismissed")
-                    showDatePicker = false // Close dialog on dismiss
-                },
-                calendarType = selectedCalendarType
-            )
+            key(selectedCalendarType) {
+                showHijriDatePicker(
+                    initialYear = initialYear,
+                    initialMonth = initialMonth,
+                    initialDay = initialDay,
+                    onDateSelected = { year, month, day ->
+                        println("Selected date: $year-$month-$day")
+                    },
+                    onConfirm = { year, month, day ->
+                        println("Confirmed date: $year-$month-$day")
+                        showDatePicker = false // Close dialog on confirm
+                    },
+                    onDismissRequest = {
+                        println("Date picker dismissed")
+                        showDatePicker = false // Close dialog on dismiss
+                    },
+                    calendarType = selectedCalendarType
+                )
+            }
         }
     }
 }
@@ -104,12 +125,10 @@ fun getDaysInMonthForCalendarType(year: Int, month: Int, calendarType: String): 
         "umalqura" -> ULocale("@calendar=islamic-umalqura")
         "civil" -> ULocale("@calendar=islamic-civil")
         "islamic" -> ULocale("@calendar=islamic")
-        else -> ULocale("@calendar=islamic-umalqura") // Default to Umm al-Qura
+        else -> ULocale("@calendar=islamic-umalqura")
     }
-
     val calendar = Calendar.getInstance(locale)
     calendar.set(Calendar.YEAR, year)
     calendar.set(Calendar.MONTH, month)
-
     return calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 }
