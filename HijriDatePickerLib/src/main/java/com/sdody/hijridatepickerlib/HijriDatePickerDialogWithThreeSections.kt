@@ -33,10 +33,11 @@ fun HijriDatePickerDialogWithThreeSections(
     initialShowYearSelection: Boolean = true, // Always show year selection when opening the dialog
     calendarType: String
 ) {
-    var selectedYear by remember { mutableStateOf(initialYear) }
-    var selectedMonth by remember { mutableStateOf(initialMonth) }
-    var selectedDay by remember { mutableStateOf(initialDay) }
-    var showYearSelection by remember { mutableStateOf(initialShowYearSelection) }
+    // Key the state with calendarType so that if it changes the state is reinitialized
+    var selectedYear by remember(calendarType) { mutableStateOf(initialYear) }
+    var selectedMonth by remember(calendarType) { mutableStateOf(initialMonth) }
+    var selectedDay by remember(calendarType) { mutableStateOf(initialDay) }
+    var showYearSelection by remember(calendarType) { mutableStateOf(initialShowYearSelection) }
 
     // Ensure selected day is valid for the selected month
     val daysInMonth = getHijriDaysInMonth(selectedYear, selectedMonth, calendarType)
@@ -57,31 +58,30 @@ fun HijriDatePickerDialogWithThreeSections(
                     .fillMaxWidth()
                     .background(Color.White)
             ) {
-                // Header section with the selected date
+                // Create a calendar instance based on the calendarType and update it with the current selection
                 val calendar = getIslamicCalendar(calendarType)
                 calendar.set(Calendar.YEAR, selectedYear)
                 calendar.set(Calendar.MONTH, selectedMonth)
                 calendar.set(Calendar.DAY_OF_MONTH, selectedDay)
 
-                // Pass the callback to trigger year selection
+                // Header section with the selected date and a callback to toggle year selection
                 HeaderSection(calendar = calendar) {
-                    showYearSelection = true // Toggle to show year selection when the year is clicked
+                    showYearSelection = true // Show year selection when the header is clicked
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Show either the year selection screen or the month grid
+                // Show either the year selection or the month grid with days
                 if (showYearSelection) {
                     YearSelectionScreen(
                         selectedYear = selectedYear,
                         onYearSelected = { year ->
                             selectedYear = year
-                            showYearSelection = false // Switch back to month grid after year is selected
+                            showYearSelection = false // Return to month grid after selecting a year
                         },
-                        currentYear = initialYear // Pass the preselected year to focus on it
+                        currentYear = initialYear // Use the preselected year to focus
                     )
                 } else {
-                    // Month Grid with Days Section
                     Box(
                         modifier = Modifier
                             .weight(1f)
@@ -93,10 +93,10 @@ fun HijriDatePickerDialogWithThreeSections(
                                 selectedYear = year
                                 selectedMonth = month
                                 selectedDay = day
-                                onDateSelected(year, month, day) // Update selected date
+                                onDateSelected(year, month, day) // Update selected date externally
                             },
-                            preselectedMonth = selectedMonth, // Pass the preselected month
-                            preselectedDay = selectedDay, // Pass the preselected day
+                            preselectedMonth = selectedMonth,
+                            preselectedDay = selectedDay,
                             calendarType = calendarType
                         )
                     }
@@ -108,36 +108,31 @@ fun HijriDatePickerDialogWithThreeSections(
                 FooterSection(
                     nextMonthName = getHijriMonthName(selectedMonth),
                     onConfirm = {
-                        onConfirm(selectedYear, selectedMonth, selectedDay)  // Pass the selected date when confirmed
+                        onConfirm(selectedYear, selectedMonth, selectedDay)
                     },
-                    onCancel = onDismissRequest  // Handle dismissal when cancel is clicked
+                    onCancel = onDismissRequest
                 )
             }
         }
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewHijriDatePickerDialogWithThreeSections() {
     HijriDatePickerDialogWithThreeSections(
-        initialYear = 1445, // Initial Hijri year
-        initialMonth = 1,   // Safar (month index starts at 0)
-        initialDay = 5,     // 5th day of Safar
+        initialYear = 1445, // Example Hijri year
+        initialMonth = 1,   // For example, Safar (month index starts at 0)
+        initialDay = 5,     // 5th day
         onDateSelected = { year, month, day ->
-            // Simulate the date selection in the preview (just log or print)
             println("Date Selected in Preview: $day-${getHijriMonthName(month)}-$year")
         },
         onConfirm = { year, month, day ->
-            // Simulate confirmation action in the preview
             println("Date Confirmed in Preview: $day-${getHijriMonthName(month)}-$year")
         },
         onDismissRequest = {
-            // Simulate dismiss action in the preview
             println("Dialog Dismissed in Preview")
         },
-        calendarType = "umalqura" // Simulate the "umalqura" calendar type for preview
+        calendarType = "umalqura" // Using the "umalqura" calendar type for this preview
     )
 }
-
